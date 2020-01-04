@@ -1,4 +1,5 @@
 <template>
+<!-- 顾客管理 -->
   <div>
     <!-- 按钮 -->
     <el-button type="success" size="small" @click="toAddHandler">添加</el-button> 
@@ -9,8 +10,8 @@
       <el-table-column prop="id" label="编号"></el-table-column>
       <el-table-column prop="realname" label="姓名"></el-table-column>
       <el-table-column prop="telephone" label="联系方式"></el-table-column>
-      <el-table-column label="操作">
-        <template v-slot="slot">
+      <el-table-column label="操作" fixed="right">
+        <template v-slot="slot"  >
           <!-- slot获取当前行 -->
           <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
           <a href="" @click.prevent="toUpdateHandler(slot.row)">修改</a>
@@ -26,7 +27,7 @@
       :title="title"
       :visible.sync="visible"
       width="60%">
-        ---{{form}}
+      
       <el-form :model="form" label-width="80px">
         <el-form-item label="用户名">
           <el-input v-model="form.username"></el-input>

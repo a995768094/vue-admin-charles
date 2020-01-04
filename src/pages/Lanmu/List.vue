@@ -6,11 +6,11 @@
     <!-- /按钮 -->
     <!-- 表格 -->
     <el-table :data="categorys">
-      <el-table-column prop="id" label="编号"></el-table-column>
-      <el-table-column prop="name" label="栏目名称"></el-table-column>
+      <el-table-column prop="id" label="编号" fixed="left"></el-table-column>
+      <el-table-column prop="name" label="栏目名称" fixed="left"></el-table-column>
       <el-table-column prop="num" label="序号"></el-table-column>
       <el-table-column prop="parentId" label="父栏目"></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" fixed="right">
         <template v-slot="slot">
           <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
           <a href="" @click.prevent="toUpdateHandler(slot.row)">修改</a>
@@ -26,13 +26,16 @@
       :title ="title"
       :visible.sync="visible"
       width="60%">
-        ---{{form}}
+
       <el-form :model="form" label-width="80px">
         <el-form-item label="栏目名称">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="序号">
           <el-input v-model="form.num"></el-input>
+        </el-form-item>
+        <el-form-item label=父栏目>
+          <el-input v-model="form.parentId"></el-input>
         </el-form-item>
       </el-form>
 
@@ -92,14 +95,20 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
+        let url="http://localhost:6677/category/deleteById?id="+id;
+        request.get(url).then((response)=>{
+          this.loadData();
+            this.$message({
           type: 'success',
           message: '删除成功!'
         });
+        })
+       
       })
       
     },
     toUpdateHandler(row){
+      this.form = row;
       this.visible = true; this.title ="修改栏目信息"
     },
     closeModalHandler(){

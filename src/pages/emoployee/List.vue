@@ -125,10 +125,15 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
+            let url="http://localhost:6677/employee/deleteById?id="+id;
+            request.get(url).then((response)=>{
+                this.loadData();
+                this.$message({
             type: 'success',
             message: '成功删除'+id+'号顾客'
           });
+            })
+          
         })
         },
         toUpdateHandler(row){

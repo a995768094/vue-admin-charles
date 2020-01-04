@@ -6,16 +6,16 @@
     <!-- /按钮 -->
     <!-- 表格 -->
     <el-table :data="products">
-      <el-table-column prop="id" label="编号"></el-table-column>
-      <el-table-column prop="name" label="产品名称"></el-table-column>
+      <el-table-column prop="id" label="编号" fixed="left" width="150"></el-table-column>
+      <el-table-column prop="name" label="产品名称" fixed="left" width="150"></el-table-column>
       <el-table-column prop="price" label="价格"></el-table-column>
-      <el-table-column prop="description" label="描述"></el-table-column>
+      <el-table-column prop="description" label="描述" width="200"></el-table-column>
       <el-table-column prop="status" label="所属产品"></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" fixed="right" width="130">
         <template v-slot="slot">
-          <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
-          <a href="" @click.prevent="toUpdateHandler">修改</a>
-          <a href="" @click.prevent="toUpdateHandler">详情</a>
+          <a href="" @click.prevent="toDeleteHandler(slot.row.id)" >删除</a>
+          <a href="" @click.prevent="toUpdateHandler(slot.row)" >修改</a>
+          <a href="" @click.prevent="toShowHandler()" >详情</a>
         </template>
       </el-table-column>
     </el-table>
@@ -28,7 +28,7 @@
       :title ="title"
       :visible.sync="visible"
       width="60%">
-        ---{{form}}
+      
       <el-form :model="form" label-width="80px">
         <el-form-item label="名称">
           <el-input v-model="form.name"></el-input>
@@ -36,8 +36,11 @@
         <el-form-item label="价格">
           <el-input v-model="form.price"></el-input>
         </el-form-item>
-        <el-form-item label="介绍">
+        <el-form-item label="描述">
           <el-input v-model="form.description"></el-input>
+        </el-form-item>
+        <el-form-item label="所属产品">
+          <el-input v-model="form.status"></el-input>
         </el-form-item>
       </el-form>
 
@@ -57,6 +60,12 @@ import querystring from 'querystring'
 export default {
   // 用于存放网页中需要调用的方法
   methods:{
+    toShowHandler(){
+      // let url="http://localhost:6677/product/query"
+      // request.get(url).then((response)=>{
+      //   document.write(data());
+      // })
+    },
     loadData(){
       let url = "http://localhost:6677/product/findAll"
       request.get(url).then((response)=>{
@@ -97,14 +106,20 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        let url="http://localhost:6677/product/deleteById?id="+id;
+      request.get(url).then((response)=>{
+        this.loadData();
         this.$message({
           type: 'success',
           message: '删除成功!'
         });
       })
+        
+      })
       
     },
     toUpdateHandler(row){
+      this.form = row;
       this.visible = true; this.title="修改产品信息"
     },
     closeModalHandler(){
